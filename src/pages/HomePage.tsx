@@ -23,12 +23,15 @@ const HomePage = () => {
 
   useEffect(() => {
     let filtered = routes;
-    if (fromFilter) {
+    
+    if (fromFilter && fromFilter !== "all-locations") {
       filtered = filtered.filter(route => route.from.toLowerCase().includes(fromFilter.toLowerCase()));
     }
-    if (toFilter) {
+    
+    if (toFilter && toFilter !== "all-locations") {
       filtered = filtered.filter(route => route.to.toLowerCase().includes(toFilter.toLowerCase()));
     }
+    
     setFilteredRoutes(filtered);
   }, [fromFilter, toFilter, routes]);
 
@@ -53,12 +56,12 @@ const HomePage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="fromLocation">From</Label>
-            <Select onValueChange={setFromFilter} value={fromFilter}>
+            <Select onValueChange={setFromFilter} value={fromFilter || "all-locations"}>
               <SelectTrigger id="fromLocation">
                 <SelectValue placeholder="Select departure" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All locations</SelectItem>
+                <SelectItem value="all-locations">All locations</SelectItem>
                 {fromLocations.map(location => (
                   <SelectItem key={location} value={location}>{location}</SelectItem>
                 ))}
@@ -67,12 +70,12 @@ const HomePage = () => {
           </div>
           <div>
             <Label htmlFor="toLocation">To</Label>
-            <Select onValueChange={setToFilter} value={toFilter}>
+            <Select onValueChange={setToFilter} value={toFilter || "all-locations"}>
               <SelectTrigger id="toLocation">
                 <SelectValue placeholder="Select destination" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All locations</SelectItem>
+                <SelectItem value="all-locations">All locations</SelectItem>
                 {toLocations.map(location => (
                   <SelectItem key={location} value={location}>{location}</SelectItem>
                 ))}
