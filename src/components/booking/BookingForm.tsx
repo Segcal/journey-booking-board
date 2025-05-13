@@ -127,7 +127,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
             </div>
             <div>
               <p className="text-sm text-gray-500">Price</p>
-              <p className="font-bold text-purple-600">${route.price.toFixed(2)}</p>
+              <p className="font-bold text-purple-600">#{route.price.toFixed(2)}</p>
             </div>
           </div>
         </div>
@@ -226,7 +226,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
             <div className="flex justify-between items-center mb-4">
               <span className="text-lg font-medium">Total:</span>
               <span className="text-xl font-bold text-purple-600">
-                ${(route.price * Math.max(1, passengers.length)).toFixed(2)}
+                #{(route.price * Math.max(1, passengers.length)).toFixed(2)}
               </span>
             </div>
           </div>
