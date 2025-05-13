@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Route, Passenger, Booking } from "@/types";
 import { useAuth } from "@/context/AuthContext";
@@ -9,7 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface BookingFormProps {
   route: Route;
@@ -19,7 +22,9 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [classType, setClassType] = useState<"first" | "second" | "third">("second");
   const [passengerName, setPassengerName] = useState("");
   const [passengerAge, setPassengerAge] = useState("");
   const [passengers, setPassengers] = useState<Passenger[]>([]);
@@ -29,17 +34,12 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
       toast({
         title: "Error",
         description: "Please enter both name and age for the passenger",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
-    const newPassenger: Passenger = {
-      name: passengerName,
-      age: parseInt(passengerAge)
-    };
-
-    setPassengers([...passengers, newPassenger]);
+    setPassengers([...passengers, { name: passengerName, age: parseInt(passengerAge) }]);
     setPassengerName("");
     setPassengerAge("");
   };
@@ -51,9 +51,18 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
       toast({
         title: "Authentication Required",
         description: "Please login to book a ticket",
-        variant: "destructive"
+        variant: "destructive",
       });
       navigate("/login");
+      return;
+    }
+
+    if (!date) {
+      toast({
+        title: "Date is required",
+        description: "Please select a travel date",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -61,7 +70,16 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
       toast({
         title: "Error",
         description: "Please add at least one passenger",
-        variant: "destructive"
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (classType !== "first" && classType !== "second" && classType !== "third") {
+      toast({
+        title: "Error",
+        description: "Please select a valid class type",
+        variant: "destructive",
       });
       return;
     }
@@ -71,17 +89,19 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
       userId: user.id,
       routeId: route.id,
       passengers,
+      classType ,
+      date: date.toISOString().split("T")[0],
       status: "pending",
       bookingDate: new Date().toISOString(),
     };
 
     saveBooking(newBooking);
-    
+
     toast({
       title: "Booking Successful",
       description: "Your booking has been submitted and is pending approval",
     });
-    
+
     navigate("/my-bookings");
   };
 
@@ -113,61 +133,86 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <h3 className="text-lg font-semibold mb-4">Passenger Information</h3>
-          
-          <div className="space-y-4 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="passengerName">Passenger Name</Label>
-                <Input
-                  id="passengerName"
-                  value={passengerName}
-                  onChange={(e) => setPassengerName(e.target.value)}
-                  placeholder="Enter passenger name"
+          {/* Travel Date */}
+          <div className="mb-4">
+            <Label htmlFor="date">Date of Journey</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-left font-normal">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>Select date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  disabled={(day) => day < new Date()}
                 />
-              </div>
-              <div>
-                <Label htmlFor="passengerAge">Age</Label>
-                <Input
-                  id="passengerAge"
-                  type="number"
-                  value={passengerAge}
-                  onChange={(e) => setPassengerAge(e.target.value)}
-                  placeholder="Enter passenger age"
-                  min="0"
-                />
-              </div>
-            </div>
-            <Button 
-              type="button" 
-              onClick={handleAddPassenger}
-              variant="outline" 
-              className="w-full md:w-auto"
-            >
-              Add Passenger
-            </Button>
+              </PopoverContent>
+            </Popover>
           </div>
+
+          {/* Class Type */}
+          <div className="mb-6">
+            <Label htmlFor="classType">Class Type</Label>
+            <Select value={classType} onValueChange={(value) => setClassType(value as any)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select class" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="first">First Class</SelectItem>
+                <SelectItem value="second">Second Class</SelectItem>
+                <SelectItem value="third">Third Class</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Passenger Details */}
+          <h3 className="text-lg font-semibold mb-4">Passenger Information</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <Label htmlFor="passengerName">Name</Label>
+              <Input
+                id="passengerName"
+                value={passengerName}
+                onChange={(e) => setPassengerName(e.target.value)}
+                placeholder="Enter name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="passengerAge">Age</Label>
+              <Input
+                id="passengerAge"
+                type="number"
+                min={0}
+                value={passengerAge}
+                onChange={(e) => setPassengerAge(e.target.value)}
+                placeholder="Enter age"
+              />
+            </div>
+          </div>
+          <Button type="button" onClick={handleAddPassenger} variant="outline" className="mb-6">
+            Add Passenger
+          </Button>
 
           {passengers.length > 0 && (
             <div className="mb-6">
               <h4 className="text-md font-medium mb-2">Added Passengers:</h4>
               <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                {passengers.map((passenger, index) => (
-                  <div key={index} className="flex justify-between items-center p-2 border-b last:border-b-0">
-                    <div>
-                      <p className="font-medium">{passenger.name}</p>
-                      <p className="text-sm text-gray-600">Age: {passenger.age}</p>
-                    </div>
+                {passengers.map((p, index) => (
+                  <div key={index} className="flex justify-between items-center">
+                    <span>{p.name} (Age: {p.age})</span>
                     <Button
-                      type="button"
                       variant="ghost"
                       size="sm"
                       onClick={() => {
-                        const updatedPassengers = [...passengers];
-                        updatedPassengers.splice(index, 1);
-                        setPassengers(updatedPassengers);
+                        const updated = [...passengers];
+                        updated.splice(index, 1);
+                        setPassengers(updated);
                       }}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500"
                     >
                       Remove
                     </Button>
@@ -179,7 +224,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
 
           <div className="border-t pt-4 mt-6">
             <div className="flex justify-between items-center mb-4">
-              <span className="text-lg font-medium">Total Amount:</span>
+              <span className="text-lg font-medium">Total:</span>
               <span className="text-xl font-bold text-purple-600">
                 ${(route.price * Math.max(1, passengers.length)).toFixed(2)}
               </span>
@@ -187,17 +232,9 @@ const BookingForm: React.FC<BookingFormProps> = ({ route }) => {
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-end space-x-4 bg-gray-50">
-        <Button 
-          variant="outline" 
-          onClick={() => navigate("/")}
-        >
-          Cancel
-        </Button>
-        <Button 
-          onClick={handleSubmit}
-          className="bg-purple-600 hover:bg-purple-700"
-        >
+      <CardFooter className="flex justify-end gap-4 bg-gray-50">
+        <Button variant="outline" onClick={() => navigate("/")}>Cancel</Button>
+        <Button onClick={handleSubmit} className="bg-purple-600 hover:bg-purple-700">
           Confirm Booking
         </Button>
       </CardFooter>

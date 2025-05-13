@@ -30,7 +30,7 @@ const RouteCard: React.FC<RouteCardProps> = ({ route, onSelect }) => {
         <div className="flex justify-between items-center border-t pt-4">
           <div>
             <p className="text-sm text-gray-500">Price</p>
-            <p className="text-xl font-bold text-purple-600">${route.price.toFixed(2)}</p>
+            <p className="text-xl font-bold text-purple-600">#{route.price.toFixed(2)}</p>
           </div>
         </div>
       </CardContent>

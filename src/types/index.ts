@@ -21,7 +21,9 @@ export interface Booking {
   routeId: string;
   passengers: Passenger[];
   status: 'pending' | 'approved' | 'rejected';
+  classType: string;
   bookingDate: string;
+  date: string;
   route?: Route;
 }
 
@@ -30,3 +32,11 @@ export interface Passenger {
   age: number;
   seatNumber?: string;
 }
+
+export interface BookingFormProps {
+  route: Route;
+  user: User | null;
+  onSubmit: (booking: Booking) => void;
+}
+
+

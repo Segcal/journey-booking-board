@@ -1,40 +1,65 @@
-
 import { User, Route, Booking } from "@/types";
+
+const isBrowser = typeof window !== "undefined";
 
 // Initial data
 const initialRoutes: Route[] = [
   {
     id: "route1",
-    from: "New York",
-    to: "Washington DC",
+    from: "Offa",
+    to: "Lagos",
     departureTime: "08:00 AM",
     arrivalTime: "11:30 AM",
-    price: 89.99
+    price: 14000
   },
   {
     id: "route2",
-    from: "Boston",
-    to: "New York",
+    from: "Offa",
+    to: "Ilorin",
     departureTime: "09:15 AM",
     arrivalTime: "11:45 AM",
-    price: 64.99
+    price: 6000
   },
   {
     id: "route3",
-    from: "Philadelphia",
-    to: "Boston",
+    from: "Offa",
+    to: "Ibadan",
     departureTime: "10:30 AM",
     arrivalTime: "03:15 PM",
-    price: 95.99
+    price: 12000
   },
   {
     id: "route4",
-    from: "Washington DC",
-    to: "Philadelphia",
+    from: "Offa",
+    to: "Abuja",
     departureTime: "12:00 PM",
     arrivalTime: "01:45 PM",
-    price: 59.99
-  }
+    price: 20000
+  },
+  {
+    id: "route5",
+    from: "Offa",
+    to: "Kaduna",
+    departureTime: "12:00 PM",
+    arrivalTime: "01:45 PM",
+    price: 25000
+  },
+  {
+    id: "route6",
+    from: "Offa",
+    to: "Kano",
+    departureTime: "12:00 PM",
+    arrivalTime: "01:45 PM",
+    price: 25000
+  },
+  {
+    id: "route7",
+    from: "Offa",
+    to: "Warri",
+    departureTime: "12:00 PM",
+    arrivalTime: "01:45 PM",
+    price: 30000
+  },
 ];
 
 const initialUsers: User[] = [
@@ -46,8 +71,10 @@ const initialUsers: User[] = [
   }
 ];
 
-// Initialize local storage with data
+// Initialize local storage with default data
 export const initializeStorage = (): void => {
+  if (!isBrowser) return;
+
   if (!localStorage.getItem("routes")) {
     localStorage.setItem("routes", JSON.stringify(initialRoutes));
   }
@@ -62,35 +89,39 @@ export const initializeStorage = (): void => {
   }
 };
 
-// User related methods
+// User methods
 export const getUsers = (): User[] => {
+  if (!isBrowser) return [];
   const users = localStorage.getItem("users");
   return users ? JSON.parse(users) : [];
 };
 
 export const saveUser = (user: User): void => {
+  if (!isBrowser) return;
   const users = getUsers();
   users.push(user);
   localStorage.setItem("users", JSON.stringify(users));
 };
 
 export const getCurrentUser = (): User | null => {
+  if (!isBrowser) return null;
   const user = localStorage.getItem("currentUser");
   return user ? JSON.parse(user) : null;
 };
 
 export const setCurrentUser = (user: User | null): void => {
+  if (!isBrowser) return;
   localStorage.setItem("currentUser", JSON.stringify(user));
 };
 
 export const authenticateUser = (username: string, password: string): User | null => {
   const users = getUsers();
-  const user = users.find(u => u.username === username && u.password === password);
-  return user || null;
+  return users.find(u => u.username === username && u.password === password) || null;
 };
 
-// Route related methods
+// Route methods
 export const getRoutes = (): Route[] => {
+  if (!isBrowser) return [];
   const routes = localStorage.getItem("routes");
   return routes ? JSON.parse(routes) : [];
 };
@@ -100,13 +131,15 @@ export const getRoute = (id: string): Route | undefined => {
   return routes.find(route => route.id === id);
 };
 
-// Booking related methods
+// Booking methods
 export const getBookings = (): Booking[] => {
+  if (!isBrowser) return [];
   const bookings = localStorage.getItem("bookings");
   return bookings ? JSON.parse(bookings) : [];
 };
 
 export const saveBooking = (booking: Booking): void => {
+  if (!isBrowser) return;
   const bookings = getBookings();
   bookings.push(booking);
   localStorage.setItem("bookings", JSON.stringify(bookings));
@@ -118,17 +151,17 @@ export const getUserBookings = (userId: string): Booking[] => {
 };
 
 export const updateBookingStatus = (bookingId: string, status: 'approved' | 'rejected'): void => {
+  if (!isBrowser) return;
   const bookings = getBookings();
-  const updatedBookings = bookings.map(booking => 
+  const updated = bookings.map(booking =>
     booking.id === bookingId ? { ...booking, status } : booking
   );
-  localStorage.setItem("bookings", JSON.stringify(updatedBookings));
+  localStorage.setItem("bookings", JSON.stringify(updated));
 };
 
 export const getAllBookingsWithRouteDetails = (): Booking[] => {
   const bookings = getBookings();
   const routes = getRoutes();
-  
   return bookings.map(booking => ({
     ...booking,
     route: routes.find(route => route.id === booking.routeId)
@@ -138,7 +171,6 @@ export const getAllBookingsWithRouteDetails = (): Booking[] => {
 export const getUserBookingsWithRouteDetails = (userId: string): Booking[] => {
   const bookings = getUserBookings(userId);
   const routes = getRoutes();
-  
   return bookings.map(booking => ({
     ...booking,
     route: routes.find(route => route.id === booking.routeId)

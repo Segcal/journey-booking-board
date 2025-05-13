@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
     <nav className="bg-white border-b border-gray-200 py-4 px-6 sticky top-0 z-10 shadow-sm">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center">
-          <span className="text-2xl font-bold text-purple-600">RailBooker</span>
+          <span className="text-2xl font-bold text-purple-600">R | B | K</span>
         </Link>
         
         <div className="flex items-center space-x-4">
@@ -52,6 +52,12 @@ const Navbar: React.FC = () => {
               >
                 Login
               </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => navigate("/scheduledetail")}
+                className="border-gray-300 text-gray-700 hover:text-purple-600">  
+                ScheduleDetails
+                </Button>
               <Button 
                 onClick={() => navigate("/signup")}
                 className="bg-purple-600 hover:bg-purple-700 text-white"
