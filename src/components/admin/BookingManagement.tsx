@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Booking } from "@/types";
 import { updateBookingStatus } from "@/services/localStorageService";
@@ -16,32 +15,42 @@ interface BookingManagementProps {
 const BookingManagement: React.FC<BookingManagementProps> = ({ bookings, onBookingUpdated }) => {
   const { toast } = useToast();
 
-  const handleUpdateStatus = (bookingId: string, status: 'approved' | 'rejected') => {
-    updateBookingStatus(bookingId, status);
-    toast({
-      title: `Booking ${status}`,
-      description: `The booking has been ${status} successfully.`,
-    });
-    onBookingUpdated();
-  };
+  const handleUpdateStatus = async (bookingId: string, status: "approved" | "rejected") => {
+    try {
+      await updateBookingStatus(bookingId, status);
 
-  // Define badge color based on status
-  const getBadgeVariant = (status: string) => {
-    switch (status) {
-      case "approved":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "rejected":
-        return "bg-red-100 text-red-800 border-red-200";
-      default:
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      toast({
+        title: `Booking ${status}`,
+        description: `The booking has been ${status} successfully.`,
+      });
+
+      onBookingUpdated(); 
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update booking status.",
+        variant: "destructive",
+      });
     }
   };
 
-  const pendingBookings = bookings.filter(booking => booking.status === 'pending');
-  const processedBookings = bookings.filter(booking => booking.status !== 'pending');
+  const getBadgeVariant = (status: string) => {
+    switch (status) {
+      case "approved":
+        return "bg-green-100 text-green-800 border border-green-300";
+      case "rejected":
+        return "bg-red-100 text-red-800 border border-red-300";
+      default:
+        return "bg-yellow-100 text-yellow-800 border border-yellow-300";
+    }
+  };
+
+  const pendingBookings = bookings.filter((booking) => booking.status === "pending");
+  const processedBookings = bookings.filter((booking) => booking.status !== "pending");
 
   return (
     <div className="space-y-6">
+      {/* Pending Bookings */}
       <Card>
         <CardHeader>
           <CardTitle>Pending Approvals</CardTitle>
@@ -97,7 +106,7 @@ const BookingManagement: React.FC<BookingManagementProps> = ({ bookings, onBooki
 
                   <div className="flex justify-end space-x-2">
                     <Button
-                      onClick={() => handleUpdateStatus(booking.id, 'rejected')}
+                      onClick={() => handleUpdateStatus(booking.id, "rejected")}
                       variant="outline"
                       className="border-red-200 text-red-600 hover:bg-red-50"
                     >
@@ -105,8 +114,8 @@ const BookingManagement: React.FC<BookingManagementProps> = ({ bookings, onBooki
                       Reject
                     </Button>
                     <Button
-                      onClick={() => handleUpdateStatus(booking.id, 'approved')}
-                      className="bg-green-600 hover:bg-green-700"
+                      onClick={() => handleUpdateStatus(booking.id, "approved")}
+                      className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       <Check className="mr-1 h-4 w-4" />
                       Approve
@@ -119,6 +128,7 @@ const BookingManagement: React.FC<BookingManagementProps> = ({ bookings, onBooki
         </CardContent>
       </Card>
 
+      {/* Processed Bookings */}
       <Card>
         <CardHeader>
           <CardTitle>Processed Bookings</CardTitle>
