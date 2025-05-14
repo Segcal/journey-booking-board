@@ -57,6 +57,9 @@ const BookingPage = () => {
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-2xl font-bold mb-6 text-center">Complete Your Booking</h1>
       <BookingForm route={route} />
+      <div className="absolute top-20 left-8 rotate-12 transition-all ease-in duration-150  hover:rotate-0  pointer-events-none">
+        <img src="https://res.cloudinary.com/dtrqikle5/image/upload/v1747188510/9035678_pculck.jpg" className="w-96 bg-gray-100 p-4 rounded-lg"  alt="" />
+      </div>
     </div>
   );
 };

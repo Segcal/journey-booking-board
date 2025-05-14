@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
     <nav className="bg-white border-b border-gray-200 py-4 px-6 sticky top-0 z-10 shadow-sm">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center">
-          <span className="text-2xl font-bold text-purple-600">R | B | K</span>
+          <span className="text-2xl font-bold text-purple-600">Offa Railway Station</span>
         </Link>
         
         <div className="flex items-center space-x-4">
