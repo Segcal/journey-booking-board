@@ -15,6 +15,7 @@ import MyBookingsPage from "./pages/MyBookingsPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import ScheduleDetails from "./pages/ScheduleDetails";
+import ProfilePage from "./pages/ProfilePage";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
               <Route path="/booking/:routeId" element={<BookingPage />} />
               <Route path="/my-bookings" element={<MyBookingsPage />} />
               <Route path="/scheduledetail" element={<ScheduleDetails />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Route>

@@ -22,7 +22,7 @@ const SignupForm: React.FC = () => {
       return;
     }
     if (signup(username, password)) {
-      navigate("/");
+      navigate("/profile");
     }
   };
 

@@ -31,7 +31,9 @@ const Navbar: React.FC = () => {
                 </Link>
               )}
               <div className="flex items-center ml-4">
+                <Link to="/profile" className="text-gray-700 hover:text-purple-600">
                 <User size={18} className="mr-1 text-gray-600" />
+                </Link>
                 <Button 
                   variant="ghost" 
                   size="sm" 
