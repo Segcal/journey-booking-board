@@ -21,11 +21,13 @@ const ProfilePage = () => {
     emergencyAddress: ""
   });
 
-  // Load saved profile data into the form on mount
+const [isRegistered, setIsRegistered] = useState(false);
+
   useEffect(() => {
     const saved = localStorage.getItem("userDetails");
     if (saved) {
       setFormData(JSON.parse(saved));
+      setIsRegistered(true);
     }
   }, []);
 
@@ -63,6 +65,7 @@ const ProfilePage = () => {
       <div className="flex gap-4 mt-6">
         <button
           onClick={handleSave}
+          disabled={isRegistered}
           className="bg-purple-600 text-white px-4 py-2 rounded"
         >
           Save
@@ -74,6 +77,11 @@ const ProfilePage = () => {
           Update
         </button>
       </div>
+        {isRegistered && (
+        <p className="mt-4 text-sm text-gray-600 italic">
+          You are already registered. You can only update your profile.
+        </p>
+      )}
     </div>
   );
 };
