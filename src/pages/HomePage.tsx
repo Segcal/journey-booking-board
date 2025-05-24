@@ -44,10 +44,12 @@ const HomePage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="relative bg-background-image bg-cover bg-center min-h-screen">
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/70"></div>
+    <div className="container mx-auto py-8 px-4 relative z-10">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Find Your Train</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-100 mb-4">Find Your Train</h1>
+        <p className="text-gray-100 max-w-2xl mx-auto">
           Book your train tickets quickly and easily. Search for routes, select your train, and book your journey in minutes.
         </p>
       </div>
@@ -96,6 +98,7 @@ const HomePage = () => {
           ))
         )}
       </div>
+    </div>
     </div>
   );
 };
