@@ -21,7 +21,7 @@ export default {
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
 				'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-				"background-image": "url('https://res.cloudinary.com/dtrqikle5/image/upload/v1747188533/train02_tpvrok.jpg')",
+				"background-image": "url('https://res.cloudinary.com/dtrqikle5/image/upload/v1748441090/IMG-20250524-WA0051_rfclyz.jpg')",
 			},
 			colors: {
 				border: 'hsl(var(--border))',
