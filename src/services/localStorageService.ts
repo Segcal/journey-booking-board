@@ -10,7 +10,7 @@ const initialRoutes: Route[] = [
     to: "Lagos",
     departureTime: "08:00 AM",
     arrivalTime: "11:30 AM",
-    price: 14000
+    price: 4500
   },
   {
     id: "route2",
@@ -18,7 +18,7 @@ const initialRoutes: Route[] = [
     to: "Ilorin",
     departureTime: "09:15 AM",
     arrivalTime: "11:45 AM",
-    price: 6000
+    price: 8000
   },
   {
     id: "route3",
@@ -26,7 +26,7 @@ const initialRoutes: Route[] = [
     to: "Ibadan",
     departureTime: "10:30 AM",
     arrivalTime: "03:15 PM",
-    price: 12000
+    price: 3000
   },
   {
     id: "route4",
@@ -34,7 +34,7 @@ const initialRoutes: Route[] = [
     to: "Abuja",
     departureTime: "12:00 PM",
     arrivalTime: "01:45 PM",
-    price: 20000
+    price: 10000
   },
   {
     id: "route5",
@@ -42,7 +42,7 @@ const initialRoutes: Route[] = [
     to: "Kaduna",
     departureTime: "12:00 PM",
     arrivalTime: "01:45 PM",
-    price: 25000
+    price: 8000
   },
   {
     id: "route6",
@@ -50,7 +50,7 @@ const initialRoutes: Route[] = [
     to: "Kano",
     departureTime: "12:00 PM",
     arrivalTime: "01:45 PM",
-    price: 25000
+    price: 9000
   },
   {
     id: "route7",
@@ -58,7 +58,7 @@ const initialRoutes: Route[] = [
     to: "Warri",
     departureTime: "12:00 PM",
     arrivalTime: "01:45 PM",
-    price: 30000
+    price: 12000
   },
 ];
 
